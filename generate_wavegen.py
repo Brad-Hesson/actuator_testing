@@ -30,7 +30,9 @@ for (ramp, disp) in product(ramp_rates, displacements):
 wavfile.write("wavegen.wav", int(1 / dt), data)
 print("Wav File Written")
 
-# plt.plot(linspace(0, len(data)*dt/60/60, len(data)),data*20)
-# plt.axhline(50, linewidth=1, color="black")
-# plt.axhline(-50, linewidth=1, color="black")
-# plt.show()
+xs = linspace(0, len(data)*dt/60/60, len(data))
+ys = data*20
+plt.scatter(xs,ys, marker='.', s=0.8)
+plt.axhline(50, linewidth=1, color="black")
+plt.axhline(-50, linewidth=1, color="black")
+plt.show()
