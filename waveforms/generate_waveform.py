@@ -7,7 +7,7 @@ from scipy.io import wavfile
 dt = 0.01  # seconds
 ramp_rates = linspace(10, 0.1, 21)  # volts/second  !!number must be odd!!
 displacements = linspace(5, 90, 21) / 20  # volts  !!number must be odd!!
-hold_time = 5 * 60  # seconds
+hold_time = 10.5 * 60  # seconds
 
 
 displacements = append(copy(displacements[::2]), flip(copy(displacements[1::2])))
@@ -26,7 +26,7 @@ for (ramp, disp) in product(ramp_rates, displacements):
     data = append(data, linspace(data[-1], data[-1], int(hold_time / dt)))
     direction *= -1
 
-wavfile.write("waveform.wav", int(1 / dt), data)
+wavfile.write("waveforms/waveform.wav", int(1 / dt), data)
 print("Wav File Written")
 
 xs = linspace(0, len(data)*dt/60/60, len(data))
