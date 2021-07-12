@@ -22,13 +22,25 @@ def read_data_file(path):
                 break
     return np.loadtxt(path, delimiter=",", skiprows=data_start, dtype=np.float64)
 
+
 def get_index_zero_crossing(y):
     return np.nonzero(np.diff(np.sign(y)))[0][0]
+
 
 def get_interp_zero_crossing(x, y):
     zci = get_index_zero_crossing(y)
     m = (y[zci + 1] - y[zci]) / (x[zci + 1] - x[zci])
     return (m * x[zci] - y[zci]) / m
+
+
+def mututal_interp(ds):
+    for d in ds:
+        shape = np.shape(d)
+        assert len(shape) == 2
+        assert shape[1] == 2
+    xs = np.sort(np.concatenate([d[:, 0] for d in ds]))
+    ys_s = [np.interp(xs, d[:, 0], d[:, 1]) for d in ds]
+    return [np.transpose(np.vstack((xs, ys))) for ys in ys_s]
 
 
 if __name__ == "__main__":
