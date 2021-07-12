@@ -26,12 +26,9 @@ for (ramp, disp) in product(ramp_rates, displacements):
     data = append(data, linspace(data[-1], data[-1], int(hold_time / dt)))
     direction *= -1
 
-wavfile.write("waveforms/waveform.wav", int(1 / dt), data)
+path = "waveforms/waveform.wav"
+wavfile.write(path, int(1 / dt), data)
 print("Wav File Written")
 
-xs = linspace(0, len(data)*dt/60/60, len(data))
-ys = data*20
-plt.scatter(xs,ys, marker='.', s=0.8)
-plt.axhline(50, linewidth=1, color="black")
-plt.axhline(-50, linewidth=1, color="black")
-plt.show()
+import display_waveform
+display_waveform.display_wav_file(path)
