@@ -1,6 +1,6 @@
 import os
 
-def files(path, full_path):
+def files(path, full_path=False):
     iter = os.walk(path)
     path, _, fnames = next(iter)
     if full_path:
