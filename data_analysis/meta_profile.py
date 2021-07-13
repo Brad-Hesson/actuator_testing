@@ -21,16 +21,21 @@ def get_aquisition_datetime(path):
             if m is not None:
                 return datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S.%f")
 
-@utils.cache_result(ttl=60*10)
+
+@utils.cache_result(ttl=60 * 10)
 def get_aquisition_time_vector(folder):
     fs = utils.get_files_in_dir(folder)
     t0 = get_aquisition_datetime(fs[0])
     ts = []
     num = len(fs)
     for i, f in enumerate(fs):
-        print("Aquisition time vector construction: %6.2f%% complete" % (100*(i+1)/num))
+        print(
+            "Aquisition time vector construction: %6.2f%% complete"
+            % (100 * (i + 1) / num)
+        )
         ts += [(get_aquisition_datetime(f) - t0).total_seconds()]
     return ts
+
 
 def mutual_mean(ds):
     for d in ds:
@@ -41,7 +46,7 @@ def mutual_mean(ds):
     return sum(new_ds) / len(new_ds)
 
 
-@utils.cache_result(ttl=60*10)
+@utils.cache_result(ttl=60 * 10)
 def get_meta_profiles(folder):
     fnames = utils.get_files_in_dir(folder)
 
@@ -50,7 +55,7 @@ def get_meta_profiles(folder):
     first_acq_dt = get_aquisition_datetime(fnames[0])
     num = len(fnames)
     for i, fname in enumerate(fnames):
-        print("Meta profile construction: %6.2f%% complete" % (100*(i+1)/num))
+        print("Meta profile construction: %6.2f%% complete" % (100 * (i + 1) / num))
         data = utils.read_data_file(fname)
         acq_dt = get_aquisition_datetime(fname)
 
@@ -70,7 +75,8 @@ def get_meta_profiles(folder):
 
     return (vus, vds)
 
-@utils.cache_result(ttl=60*10)
+
+@utils.cache_result(ttl=60 * 10)
 def get_meta_profile(folder):
     vus, vds = get_meta_profiles(folder)
     return mutual_mean((vus, vds))
@@ -82,16 +88,16 @@ if __name__ == "__main__":
     vs = get_meta_profile(folder)
     vus, vds = get_meta_profiles(folder)
 
-    plt.subplot(2,1,1)
-    #plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
-    #plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
+    plt.subplot(2, 1, 1)
+    # plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
+    # plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
     plt.plot(vs[:, 0] / 60 / 60, vs[:, 1])
-    
+
     mvus, mvds = utils.mututal_interp((vus, vds))
     mvds[:, 0] *= 0
-    mvus[:,1] -= mvds[:,1]
+    mvus[:, 1] -= mvds[:, 1]
     ds = mvus
 
-    plt.subplot(2,1,2)
+    plt.subplot(2, 1, 2)
     plt.plot(ds[:, 0] / 60 / 60, ds[:, 1])
     plt.show()

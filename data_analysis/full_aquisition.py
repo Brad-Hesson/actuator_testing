@@ -4,7 +4,7 @@ import utils
 import meta_profile
 
 
-@utils.cache_result(ttl=60*10)
+@utils.cache_result(ttl=60 * 10)
 def get_full_aquisition(folder):
     ts = meta_profile.get_aquisition_time_vector(folder)
     fs = utils.get_files_in_dir(folder)
@@ -18,7 +18,8 @@ def get_full_aquisition(folder):
         all_data = np.vstack((all_data, data))
     return all_data
 
-@utils.cache_result(ttl=60*10)
+
+@utils.cache_result(ttl=60 * 10)
 def get_normalized_full_aquisition(folder):
     data = get_full_aquisition(folder)
     vs = meta_profile.get_meta_profile(folder)
@@ -28,7 +29,7 @@ def get_normalized_full_aquisition(folder):
 
 if __name__ == "__main__":
     folder = "data/sn0001"
-    #folder = r"data\old\4plate_v1\P10min_A100m_S1p"
+    # folder = r"data\old\4plate_v1\P10min_A100m_S1p"
 
     data = get_full_aquisition(folder)
     vs = meta_profile.get_meta_profile(folder)

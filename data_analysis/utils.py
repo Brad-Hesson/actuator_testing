@@ -59,7 +59,7 @@ def cache_result(ttl=None):
 cache_result.nested = False
 
 
-@cache_result(ttl=60*10)
+@cache_result(ttl=60 * 10)
 def get_files_in_dir(folder, full_path=True):
     iter = os.walk(folder)
     path, _, fnames = next(iter)
