@@ -72,10 +72,11 @@ if __name__ == "__main__":
     mvds[:, 0] *= 0
     ds = mvus - mvds
 
+    plt.subplot(2,1,1)
     plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
     plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
     plt.plot(vs[:, 0] / 60 / 60, vs[:, 1])
-    plt.show()
 
+    plt.subplot(2,1,2)
     plt.plot(ds[:, 0] / 60 / 60, ds[:, 1])
     plt.show()
