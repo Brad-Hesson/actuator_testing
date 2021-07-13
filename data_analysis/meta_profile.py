@@ -12,7 +12,7 @@ def get_crossing_direction(d):
     return np.sign(d[zci + 1] - d[zci])
 
 
-@utils.cache_result
+@utils.cache_result()
 def get_aquisition_datetime(path):
     pat = re.compile("#Date Time: (.*)$")
     with open(path) as f:
@@ -21,6 +21,7 @@ def get_aquisition_datetime(path):
             if m is not None:
                 return datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S.%f")
 
+@utils.cache_result(ttl=60*10)
 def get_aquisition_time_vector(folder):
     fs = utils.get_files_in_dir(folder)
     t0 = get_aquisition_datetime(fs[0])
@@ -40,7 +41,7 @@ def mutual_mean(ds):
     return sum(new_ds) / len(new_ds)
 
 
-#@utils.cache_result
+@utils.cache_result(ttl=60*10)
 def get_meta_profiles(folder):
     fnames = utils.get_files_in_dir(folder)
 
@@ -69,6 +70,7 @@ def get_meta_profiles(folder):
 
     return (vus, vds)
 
+@utils.cache_result(ttl=60*10)
 def get_meta_profile(folder):
     vus, vds = get_meta_profiles(folder)
     return mutual_mean((vus, vds))

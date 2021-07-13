@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import get_files_in_dir, read_data_file
+from numpy.lib import utils
+from utils import get_files_in_dir, read_data_file, cache_result
 from meta_profile import (
     get_aquisition_datetime,
     get_meta_profile,
@@ -8,6 +9,7 @@ from meta_profile import (
 )
 
 
+@cache_result(ttl=60*10)
 def get_full_aquisition(folder):
     ts = get_aquisition_time_vector(folder)
     fs = get_files_in_dir(folder)
@@ -21,7 +23,7 @@ def get_full_aquisition(folder):
         all_data = np.vstack((all_data, data))
     return all_data
 
-
+@cache_result(ttl=60*10)
 def get_normalized_full_aquisition(folder):
     data = get_full_aquisition(folder)
     vs = get_meta_profile(folder)
@@ -31,7 +33,7 @@ def get_normalized_full_aquisition(folder):
 
 if __name__ == "__main__":
     folder = "data/sn0001"
-    folder = r"data\old\4plate_v1\P10min_A100m_S1p"
+    #folder = r"data\old\4plate_v1\P10min_A100m_S1p"
 
     data = get_full_aquisition(folder)
     vs = get_meta_profile(folder)
@@ -40,7 +42,8 @@ if __name__ == "__main__":
     plt.plot(data[:, 0], data[:, 1])
     plt.plot(vs[:, 0], vs[:, 1])
 
+    data = get_normalized_full_aquisition(folder)
+
     plt.subplot(2, 1, 2)
-    data[:, 1] -= np.interp(data[:, 0], vs[:, 0], vs[:, 1])
     plt.plot(data[:, 0], data[:, 1] * 1000 * 1000 * 1000)
     plt.show()
