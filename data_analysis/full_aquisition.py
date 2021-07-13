@@ -28,7 +28,7 @@ def get_normalized_full_aquisition(folder):
 
 
 if __name__ == "__main__":
-    folder = "data/sn0001"
+    folder = "data/sn0001/07-12-2021"
     # folder = r"data\old\4plate_v1\P10min_A100m_S1p"
 
     data = get_full_aquisition(folder)

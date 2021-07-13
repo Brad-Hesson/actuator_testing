@@ -83,7 +83,7 @@ def get_meta_profile(folder):
 
 
 if __name__ == "__main__":
-    folder = "data/sn0001"
+    folder = "data/sn0001/07-12-2021"
 
     vs = get_meta_profile(folder)
     vus, vds = get_meta_profiles(folder)
