@@ -9,6 +9,9 @@ from datetime import datetime, timedelta
 def cache_result(ttl=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
+            # if we are inside a non-ttl cached function and we ourselves
+            # are a ttl cache function, there is potential for invalid data.
+            assert not (cache_result.nested and ttl is not None)
             args_key = repr(args) + repr(kwargs)
             f_name = func.__name__
             s_flag = "c"
