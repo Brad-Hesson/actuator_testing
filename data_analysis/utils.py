@@ -7,29 +7,46 @@ import inspect
 
 def cache_result(func):
     def wrapper(*args, **kwargs):
-        if cache_result.nested:
-            return func(*args, **kwargs)
         args_key = repr(args) + repr(kwargs)
         f_name = func.__name__
-        s_flag = 'c'
+        s_flag = "c"
         try:
             with shelve.open("./__cache_store__/" + f_name, "c") as sh:
                 if sh["function_hash"] == inspect.getsource(func):
+                    # if the key exists in the shelf and the function has not been modified
+                    # since the last cache, just return the cached value.
                     return sh[args_key]
                 else:
-                    s_flag = 'n'
+                    # if the function has been modified since the last cache, mark the
+                    # open flag to clear the shelf completely because any/all of the
+                    # cached values may now be invalid.
+                    s_flag = "n"
         except FileNotFoundError:
+            # if the cache directory does not exist, create it.
             os.mkdir("./__cache_store__")
         except KeyError:
+            # if the function cache does not exist or the args key does not exist in
+            # the cache file, continue to run the function and store the result.
             pass
-        cache_result.nested = True
-        out = func(*args, **kwargs)
-        cache_result.nested = False
-        with shelve.open("./__cache_store__/" + f_name, s_flag) as sh:
-            sh["function_hash"] = inspect.getsource(func)
-            sh[args_key] = out
-        return out
+        if cache_result.nested:
+            # if we are currently running in a higher level cached function, simply
+            # run the function and return.  This is because the higher level cache
+            # will store the value, and we don't want to store intermediate results.
+            return func(*args, **kwargs)
+        else:
+            # if we are not in a higher level cache function, set the nested flag to
+            # notify lower level functions, run the function, and store the result.
+            cache_result.nested = True
+            out = func(*args, **kwargs)
+            cache_result.nested = False
+            with shelve.open("./__cache_store__/" + f_name, s_flag) as sh:
+                sh["function_hash"] = inspect.getsource(func)
+                sh[args_key] = out
+            return out
+
     return wrapper
+
+
 cache_result.nested = False
 
 
@@ -74,13 +91,12 @@ def mututal_interp(ds):
     return [np.transpose(np.vstack((xs, ys))) for ys in ys_s]
 
 
-
-
 if __name__ == "__main__":
+
     @cache_result
     def fun(i):
         print("actually ran")
         return i
-    
+
     print(fun(1))
     print(fun(2))
