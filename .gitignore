@@ -3,3 +3,4 @@
 *.jpg
 *.wav
 /__cache_store__
+/.vscode
