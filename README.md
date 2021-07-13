@@ -1,6 +1,6 @@
 # Actuator Testing Software
 
-This is a repo to hold the scripts and programs i am writing to be able to test the actuators that we build.
+This is a repo to hold the scripts and programs I am writing to be able to test the actuators that we build.
 
 ## It has scripts for:
 - Generating the waverforms we use to drive the actuators during testing
