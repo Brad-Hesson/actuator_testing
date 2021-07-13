@@ -32,7 +32,7 @@ def mutual_mean(ds):
 
 #@utils.cache_result
 def get_meta_profiles(folder):
-    fnames = utils.get_files_in_dir(folder, True)
+    fnames = utils.get_files_in_dir(folder)
 
     vus = np.empty((0, 2), dtype=np.float64)
     vds = np.empty((0, 2), dtype=np.float64)

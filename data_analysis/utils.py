@@ -50,7 +50,7 @@ def cache_result(func):
 cache_result.nested = False
 
 
-def get_files_in_dir(path, full_path=False):
+def get_files_in_dir(path, full_path=True):
     iter = os.walk(path)
     path, _, fnames = next(iter)
     if full_path:
