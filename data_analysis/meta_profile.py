@@ -79,16 +79,18 @@ def get_meta_profile(folder):
 if __name__ == "__main__":
     folder = "data/sn0001"
 
+    vs = get_meta_profile(folder)
     vus, vds = get_meta_profiles(folder)
-    mvus, mvds = utils.mututal_interp((vus, vds))
-    vs = mutual_mean((vus, vds))
-    mvds[:, 0] *= 0
-    ds = mvus - mvds
 
     plt.subplot(2,1,1)
     #plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
     #plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
     plt.plot(vs[:, 0] / 60 / 60, vs[:, 1])
+    
+    mvus, mvds = utils.mututal_interp((vus, vds))
+    mvds[:, 0] *= 0
+    mvus[:,1] -= mvds[:,1]
+    ds = mvus
 
     plt.subplot(2,1,2)
     plt.plot(ds[:, 0] / 60 / 60, ds[:, 1])
