@@ -7,6 +7,8 @@ import inspect
 
 def cache_result(func):
     def wrapper(*args, **kwargs):
+        if cache_result.nested:
+            return func(*args, **kwargs)
         args_key = repr(args) + repr(kwargs)
         f_name = func.__name__
         s_flag = 'c'
@@ -20,13 +22,15 @@ def cache_result(func):
             os.mkdir("./__cache_store__")
         except KeyError:
             pass
+        cache_result.nested = True
         out = func(*args, **kwargs)
+        cache_result.nested = False
         with shelve.open("./__cache_store__/" + f_name, s_flag) as sh:
             sh["function_hash"] = inspect.getsource(func)
             sh[args_key] = out
         return out
-
     return wrapper
+cache_result.nested = False
 
 
 def get_files_in_dir(path, full_path=False):
