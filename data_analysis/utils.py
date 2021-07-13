@@ -6,17 +6,22 @@ import inspect
 
 
 def cache_result(func):
-    def wrapper(*args):
-        args_key = repr(args)
-        name = func.__name__
-        if "__cache_store__" not in next(os.walk("."))[1]:
-            os.mkdir("./__cache_store__")
-        with shelve.open("./__cache_store__/" + name, "c") as sh:
-            if "function_hash" in sh and sh["function_hash"] == inspect.getsource(func):
-                if args_key in sh:
+    def wrapper(*args, **kwargs):
+        args_key = repr(args) + repr(kwargs)
+        f_name = func.__name__
+        s_flag = 'c'
+        try:
+            with shelve.open("./__cache_store__/" + f_name, "c") as sh:
+                if sh["function_hash"] == inspect.getsource(func):
                     return sh[args_key]
-        out = func(*args)
-        with shelve.open("./__cache_store__/" + name, "c") as sh:
+                else:
+                    s_flag = 'n'
+        except FileNotFoundError:
+            os.mkdir("./__cache_store__")
+        except KeyError:
+            pass
+        out = func(*args, **kwargs)
+        with shelve.open("./__cache_store__/" + f_name, s_flag) as sh:
             sh["function_hash"] = inspect.getsource(func)
             sh[args_key] = out
         return out
@@ -65,10 +70,13 @@ def mututal_interp(ds):
     return [np.transpose(np.vstack((xs, ys))) for ys in ys_s]
 
 
+
+
 if __name__ == "__main__":
-    DEBUG = False
-    folder = "data/sn0001"
-    pred = lambda p: ".csv" in p
-    files = filter(pred, get_files_in_dir(folder, True))
-    data = read_data_file(list(files)[0])
-    print(data[0, 2])
+    @cache_result
+    def fun(i):
+        print("actually ran")
+        return i
+    
+    print(fun(1))
+    print(fun(2))
