@@ -1,6 +1,27 @@
 import os
 import numpy as np
 import re
+import shelve
+import inspect
+
+
+def cache_result(func):
+    def wrapper(*args):
+        args_key = repr(args)
+        name = func.__name__
+        if "__cache_store__" not in next(os.walk("."))[1]:
+            os.mkdir("./__cache_store__")
+        with shelve.open("./__cache_store__/" + name, "c") as sh:
+            if "function_hash" in sh and sh["function_hash"] == inspect.getsource(func):
+                if args_key in sh:
+                    return sh[args_key]
+        out = func(*args)
+        with shelve.open("./__cache_store__/" + name, "c") as sh:
+            sh["function_hash"] = inspect.getsource(func)
+            sh[args_key] = out
+        return out
+
+    return wrapper
 
 
 def get_files_in_dir(path, full_path=False):
@@ -12,6 +33,7 @@ def get_files_in_dir(path, full_path=False):
         return [os.path.normpath(fname) for fname in fnames]
 
 
+@cache_result
 def read_data_file(path):
     pat = re.compile("^((-?\d+(\.\d+)?(e-?\d+)?),?)+$")
     data_start = 0
