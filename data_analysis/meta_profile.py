@@ -21,6 +21,16 @@ def get_aquisition_datetime(path):
             if m is not None:
                 return datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S.%f")
 
+def get_aquisition_time_vector(folder):
+    fs = utils.get_files_in_dir(folder)
+    t0 = get_aquisition_datetime(fs[0])
+    ts = []
+    num = len(fs)
+    for i, f in enumerate(fs):
+        print("Aquisition time vector construction: %6.2f%% complete" % (100*(i+1)/num))
+        ts += [(get_aquisition_datetime(f) - t0).total_seconds()]
+    return ts
+
 def mutual_mean(ds):
     for d in ds:
         shape = np.shape(d)
@@ -74,8 +84,8 @@ if __name__ == "__main__":
     ds = mvus - mvds
 
     plt.subplot(2,1,1)
-    plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
-    plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
+    #plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
+    #plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
     plt.plot(vs[:, 0] / 60 / 60, vs[:, 1])
 
     plt.subplot(2,1,2)
