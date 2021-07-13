@@ -9,12 +9,18 @@ from datetime import datetime, timedelta
 def cache_result(ttl=None):
     def decorator(func):
         def wrapper(*args, **kwargs):
+            f_name = func.__name__
+
             # if we are inside a non-ttl cached function and we ourselves
             # are a ttl cache function, there is potential for invalid data.
-            assert not (cache_result.nested and ttl is not None)
+            assert not (
+                cache_result.nested is not None and ttl is not None
+            ), "ttl cached function `%s` inside of non-ttl cached function `%s`" % (
+                f_name,
+                cache_result.nested,
+            )
             args_key = repr(args) + repr(kwargs)
-            f_name = func.__name__
-            s_flag = "c"
+            sh_flag = "c"
             try:
                 with shelve.open("./__cache_store__/" + f_name, "c") as sh:
                     if sh["function_hash"] == inspect.getsource(func):
@@ -27,7 +33,7 @@ def cache_result(ttl=None):
                         # if the function has been modified since the last cache, mark the
                         # open flag to clear the shelf completely because any/all of the
                         # cached values may now be invalid.
-                        s_flag = "n"
+                        sh_flag = "n"
             except FileNotFoundError:
                 # if the cache directory does not exist, create it.
                 os.mkdir("./__cache_store__")
@@ -36,7 +42,7 @@ def cache_result(ttl=None):
                 # the cache file, or a ttl was provided but none exists in the cache, then
                 # continue to run the function and store the result.
                 pass
-            if cache_result.nested:
+            if cache_result.nested is not None:
                 # if we are currently running in a higher level cached function, simply
                 # run the function and return.  This is because the higher level cache
                 # will store the value, and we don't want to store intermediate results.
@@ -44,10 +50,10 @@ def cache_result(ttl=None):
             else:
                 # if we are not in a higher level cache function and we do not have a
                 # tll, set the nested flag to notify lower level functions that they are nested.
-                cache_result.nested = True if ttl is None else cache_result.nested
+                cache_result.nested = f_name if ttl is None else cache_result.nested
                 out = func(*args, **kwargs)
-                cache_result.nested = False if ttl is None else cache_result.nested
-                with shelve.open("./__cache_store__/" + f_name, s_flag) as sh:
+                cache_result.nested = None if ttl is None else cache_result.nested
+                with shelve.open("./__cache_store__/" + f_name, sh_flag) as sh:
                     sh["function_hash"] = inspect.getsource(func)
                     sh[args_key] = out
                     if ttl is not None:
@@ -59,7 +65,7 @@ def cache_result(ttl=None):
     return decorator
 
 
-cache_result.nested = False
+cache_result.nested = None
 
 
 @cache_result(ttl=60 * 10)
