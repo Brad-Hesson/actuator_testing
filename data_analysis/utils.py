@@ -61,7 +61,7 @@ def get_files_in_dir(path, full_path=True):
 
 @cache_result
 def read_data_file(path):
-    pat = re.compile("^((-?\d+(\.\d+)?(e-?\d+)?),?)+$")
+    pat = re.compile(r"^((-?\d+(\.\d+)?(e-?\d+)?),?)+$")
     data_start = 0
     with open(path) as f:
         for i, line in enumerate(f):
