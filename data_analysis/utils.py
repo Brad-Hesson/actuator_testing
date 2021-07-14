@@ -77,6 +77,15 @@ def get_files_in_dir(folder, full_path=True):
         return [os.path.normpath(fname) for fname in fnames]
 
 
+def get_data_files_in_dir(folder, full_path=True):
+    files = get_files_in_dir(folder, full_path=False)
+    if full_path:
+        return [os.path.join(folder, f) for f in files if "acq" in f and ".csv" in f]
+    else:
+        return [f for f in files if "acq" in f and ".csv" in f]
+
+
+
 @cache_result()
 def read_data_file(path):
     pat = re.compile(r"^((-?\d+(\.\d+)?(e-?\d+)?),?)+$")
@@ -113,11 +122,5 @@ def mututal_interp(ds):
 
 
 if __name__ == "__main__":
-
-    @cache_result(ttl=5)
-    def fun(i):
-        print("actually ran")
-        return i
-
-    print(fun(1))
-    print(fun(2))
+    folder = "data/sn0001/07-12-2021"
+    _ = [print(f) for f in get_data_files_in_dir(folder, False)]

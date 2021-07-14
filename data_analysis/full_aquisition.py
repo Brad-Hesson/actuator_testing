@@ -7,7 +7,7 @@ import meta_profile
 @utils.cache_result(ttl=60 * 10)
 def get_full_aquisition(folder):
     ts = meta_profile.get_aquisition_time_vector(folder)
-    fs = utils.get_files_in_dir(folder)
+    fs = utils.get_data_files_in_dir(folder)
 
     all_data = np.empty((0, 2))
     num = len(fs)

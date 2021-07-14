@@ -24,7 +24,7 @@ def get_aquisition_datetime(path):
 
 
 def get_folder_aquisition_datetime(folder):
-    fs = utils.get_files_in_dir(folder)
+    fs = utils.get_data_files_in_dir(folder)
     return get_aquisition_datetime(fs[0])
 
 
@@ -36,7 +36,7 @@ def get_aquisition_reltime(path):
 
 @utils.cache_result(ttl=60 * 10)
 def get_aquisition_time_vector(folder):
-    fs = utils.get_files_in_dir(folder)
+    fs = utils.get_data_files_in_dir(folder)
     t0 = get_folder_aquisition_datetime(folder)
     ts = []
     num = len(fs)
@@ -60,7 +60,7 @@ def mutual_mean(ds):
 
 @utils.cache_result(ttl=60 * 10)
 def get_meta_profiles(folder):
-    fnames = utils.get_files_in_dir(folder)
+    fnames = utils.get_data_files_in_dir(folder)
 
     vus = np.empty((0, 2), dtype=np.float64)
     vds = np.empty((0, 2), dtype=np.float64)
