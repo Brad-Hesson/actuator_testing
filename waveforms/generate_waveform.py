@@ -1,4 +1,4 @@
-from numpy import linspace, array, append, flip, copy
+from numpy import linspace, array, append, flip, copy, savetxt
 from itertools import product
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
@@ -26,9 +26,11 @@ for (ramp, disp) in product(ramp_rates, displacements):
     data = append(data, linspace(data[-1], data[-1], int(hold_time / dt)))
     direction *= -1
 
-path = "waveforms/waveform.wav"
-wavfile.write(path, int(1 / dt), data)
+path = "waveforms/waveform"
+metadata = array(list(product(ramp_rates*20, displacements*20)))
+savetxt(path+'.csv', metadata)
+wavfile.write(path+'.wav', int(1 / dt), data)
 print("Wav File Written")
 
 import display_waveform
-display_waveform.display_wav_file(path)
+display_waveform.display_wav_file(path+'.wav')
