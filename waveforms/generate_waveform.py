@@ -10,14 +10,19 @@ displacements = np.linspace(5, 90, 21) / 20  # volts  !!number must be odd!!
 hold_time = 10.5 * 60  # seconds
 
 
-displacements = np.append(np.copy(displacements[::2]), np.flip(np.copy(displacements[1::2])))
+displacements = np.append(
+    np.copy(displacements[::2]), np.flip(np.copy(displacements[1::2]))
+)
 print(displacements)
 data = np.array([displacements[0] / 2] * int(hold_time / dt))
 direction = -1
 num = len(ramp_rates) * len(displacements)
 i = 1
 for (ramp, disp) in itertools.product(ramp_rates, displacements):
-    print("Progress: %5.2f%%  Ramp: %5.2f v/s  Disp: %5.2f v" % (i / num * 100, ramp, disp))
+    print(
+        "Progress: %5.2f%%  Ramp: %5.2f v/s  Disp: %5.2f v"
+        % (i / num * 100, ramp, disp)
+    )
     i += 1
     start_v = data[-1]
     data = np.append(
@@ -27,10 +32,11 @@ for (ramp, disp) in itertools.product(ramp_rates, displacements):
     direction *= -1
 
 path = "waveforms/waveform"
-metadata = np.array(list(itertools.product(ramp_rates*20, displacements*20)))
-np.savetxt(path+'.csv', metadata)
-wavfile.write(path+'.wav', int(1 / dt), data)
+metadata = np.array(list(itertools.product(ramp_rates * 20, displacements * 20)))
+np.savetxt(path + ".csv", metadata)
+wavfile.write(path + ".wav", int(1 / dt), data)
 print("Wav File Written")
 
 import display_waveform
-display_waveform.display_wav_file(path+'.wav')
+
+display_waveform.display_wav_file(path + ".wav")
