@@ -22,10 +22,15 @@ def get_aquisition_datetime(path):
                 return datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S.%f")
 
 
+def get_folder_aquisition_datetime(folder):
+    fs = utils.get_files_in_dir(folder)
+    return get_aquisition_datetime(fs[0])
+
+
 @utils.cache_result(ttl=60 * 10)
 def get_aquisition_time_vector(folder):
     fs = utils.get_files_in_dir(folder)
-    t0 = get_aquisition_datetime(fs[0])
+    t0 = get_folder_aquisition_datetime(folder)
     ts = []
     num = len(fs)
     for i, f in enumerate(fs):
