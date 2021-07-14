@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import utils
 import re
 from datetime import datetime
+import os
 
 
 def get_crossing_direction(d):
@@ -25,6 +26,12 @@ def get_aquisition_datetime(path):
 def get_folder_aquisition_datetime(folder):
     fs = utils.get_files_in_dir(folder)
     return get_aquisition_datetime(fs[0])
+
+
+def get_aquisition_reltime(path):
+    folder = os.path.dirname(path)
+    t0 = get_folder_aquisition_datetime(folder)
+    return (get_aquisition_datetime(path) - t0).total_seconds()
 
 
 @utils.cache_result(ttl=60 * 10)
