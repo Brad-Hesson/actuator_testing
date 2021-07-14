@@ -89,14 +89,17 @@ def read_data_file(path):
     return np.loadtxt(path, delimiter=",", skiprows=data_start, dtype=np.float64)
 
 
-def get_index_zero_crossing(y):
-    return np.nonzero(np.diff(np.sign(y)))[0][0]
+def get_index_zero_crossings(y):
+    return np.nonzero(np.diff(np.sign(y)))[0]
 
 
-def get_interp_zero_crossing(x, y):
-    zci = get_index_zero_crossing(y)
-    m = (y[zci + 1] - y[zci]) / (x[zci + 1] - x[zci])
-    return (m * x[zci] - y[zci]) / m
+def get_interp_zero_crossings(x, y):
+    zcis = get_index_zero_crossings(y)
+    zcs = []
+    for zci in zcis:
+        m = (y[zci + 1] - y[zci]) / (x[zci + 1] - x[zci])
+        zcs += [(m * x[zci] - y[zci]) / m]
+    return zcs
 
 
 def mututal_interp(ds):

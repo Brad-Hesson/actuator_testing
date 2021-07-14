@@ -6,11 +6,11 @@ from datetime import datetime
 import os
 
 
-def get_crossing_direction(d):
+def get_crossing_directions(d):
     shape = np.shape(d)
     assert len(shape) == 1
-    zci = utils.get_index_zero_crossing(d)
-    return np.sign(d[zci + 1] - d[zci])
+    zcis = utils.get_index_zero_crossings(d)
+    return [np.sign(d[zci + 1] - d[zci]) for zci in zcis]
 
 
 @utils.cache_result()
@@ -75,12 +75,12 @@ def get_meta_profiles(folder):
         signal = data[:, 1]
         drive = data[:, 2]
 
-        zc = utils.get_interp_zero_crossing(time, drive)
+        zc = utils.get_interp_zero_crossings(time, drive)[0]
         sig_at_zc = np.interp(zc, time, signal)
         acq_time = (acq_dt - first_acq_dt).total_seconds()
         row = np.array([acq_time, sig_at_zc])
 
-        if get_crossing_direction(drive) > 0:
+        if get_crossing_directions(drive)[0] > 0:
             vus = np.vstack((vus, row))
         else:
             vds = np.vstack((vds, row))
