@@ -101,8 +101,8 @@ if __name__ == "__main__":
     vus, vds = get_meta_profiles(folder)
 
     plt.subplot(2, 1, 1)
-    # plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
-    # plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
+    plt.plot(vds[:, 0] / 60 / 60, vds[:, 1])
+    plt.plot(vus[:, 0] / 60 / 60, vus[:, 1])
     plt.plot(vs[:, 0] / 60 / 60, vs[:, 1])
 
     mvus, mvds = utils.mututal_interp((vus, vds))
