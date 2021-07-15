@@ -85,7 +85,6 @@ def get_data_files_in_dir(folder, full_path=True):
         return [f for f in files if "acq" in f and ".csv" in f]
 
 
-
 @cache_result()
 def read_data_file(path):
     pat = re.compile(r"^((-?\d+(\.\d+)?(e-?\d+)?),?)+$")
