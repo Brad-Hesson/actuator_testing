@@ -80,7 +80,8 @@ def get_meta_profiles(folder):
         acq_time = (acq_dt - first_acq_dt).total_seconds()
         row = np.array([acq_time, sig_at_zc])
 
-        if get_crossing_directions(drive)[0] > 0:
+        mid = (np.max(signal) + np.min(signal)) / 2
+        if get_crossing_directions(signal - mid)[0] > 0:
             vus = np.vstack((vus, row))
         else:
             vds = np.vstack((vds, row))
