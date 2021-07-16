@@ -56,19 +56,15 @@ def get_ramp_corner_times(path):
     out = optimize.curve_fit(f, data[:, 0], data[:, 2], p0)
     return (out[0][0], out[0][1])
 
+
 def get_spline_data(path):
-        data = get_aligned_data(path, False)
+    data = get_aligned_data(path, False)
 
-        data_filt = np.copy(data)
-        filt = signal.butter(8, 1 / 5)
-        data_filt[:, 1] = signal.filtfilt(*filt, data_filt[:, 1])
-
-        weights = np.abs(data[:, 1] - np.mean(data_filt[:, 1]))
-        weights /= np.mean(weights)
-        spl = interpolate.UnivariateSpline(
-            data_filt[:, 0], data_filt[:, 1], w=weights, s=2e-15, k=3
-        )
-        return spl
+    weights = np.abs(data[:, 1] - np.mean(data[:, 1]))
+    weights /= np.mean(weights)
+    spl = interpolate.UnivariateSpline(data[:, 0], data[:, 1], w=weights, k=4)
+    spl.set_smoothing_factor(8e-15)
+    return spl
 
 
 if __name__ == "__main__":
