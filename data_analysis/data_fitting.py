@@ -41,7 +41,7 @@ def get_aligned_data(path, normalize=True):
 
 
 def get_ramp_corner_times(path):
-    data = get_normalized_data(path)
+    data = utils.read_data_file(path)
     m, _ = get_metadata(path)
     m *= meta_profile.get_crossing_directions(data[:, 2])[0]
 
