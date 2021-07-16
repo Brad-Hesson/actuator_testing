@@ -28,7 +28,7 @@ def get_normalized_full_aquisition(folder):
 
 
 if __name__ == "__main__":
-    folder = "data/sn0001/07-14-2021"
+    folder = "data/sn0001/07-15-2021"
 
     data = get_full_aquisition(folder)
     vs = meta_profile.get_meta_profile(folder)
