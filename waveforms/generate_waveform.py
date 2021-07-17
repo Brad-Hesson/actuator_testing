@@ -6,9 +6,9 @@ from scipy.io import wavfile
 
 dt = 0.01  # seconds
 ramp_rates = np.linspace(5, 0.1, 5)  # volts/second  !!number must be odd!!
-displacements = np.linspace(5, 90, 5) / 20  # volts  !!number must be odd!!
+displacements = np.linspace(95, 95, 1) / 20  # volts  !!number must be odd!!
 hold_time = 10.5 * 60  # seconds
-repeat = 5
+repeat = 25
 
 displacements = np.append(
     np.copy(displacements[::2]), np.flip(np.copy(displacements[1::2]))
