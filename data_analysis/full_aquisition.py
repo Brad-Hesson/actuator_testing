@@ -12,7 +12,8 @@ def get_full_aquisition(folder):
     all_data = np.empty((0, 2))
     num = len(fs)
     for f, t, i in zip(fs, ts, range(len(fs))):
-        print("Full aquisition construction: %6.2f%% complete" % (100 * (i + 1) / num))
+        print("Full aquisition construction: %6.2f%% complete" %
+              (100 * (i + 1) / num))
         data = utils.read_data_file(f)[:, [0, 1]]
         data[:, 0] += t
         all_data = np.vstack((all_data, data))
@@ -28,7 +29,7 @@ def get_normalized_full_aquisition(folder):
 
 
 if __name__ == "__main__":
-    folder = "data/sn0001/07-15-2021"
+    folder = "data/sn0001/07-16-2021"
 
     data = get_full_aquisition(folder)
     vs = meta_profile.get_meta_profile(folder)

@@ -67,7 +67,8 @@ def get_meta_profiles(folder):
     first_acq_dt = get_aquisition_datetime(fnames[0])
     num = len(fnames)
     for i, fname in enumerate(fnames):
-        print("Meta profile construction: %6.2f%% complete" % (100 * (i + 1) / num))
+        print("Meta profile construction: %6.2f%% complete" %
+              (100 * (i + 1) / num))
         data = utils.read_data_file(fname)
         acq_dt = get_aquisition_datetime(fname)
 
@@ -96,7 +97,7 @@ def get_meta_profile(folder):
 
 
 if __name__ == "__main__":
-    folder = "data/sn0001/07-15-2021"
+    folder = "data/sn0001/07-16-2021"
 
     vs = get_meta_profile(folder)
     vus, vds = get_meta_profiles(folder)
